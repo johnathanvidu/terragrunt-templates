@@ -11,11 +11,11 @@ include "root" {
 }
 
 locals {
-  # Automatically load environment-level variables
-  environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
 
   # Extract out common variables for reuse
-  env = local.environment_vars.locals.environment
+  env = local.account_vars.locals.environment
 }
 
 # Configure the version of the module to use in this environment. This allows you to promote new versions one
