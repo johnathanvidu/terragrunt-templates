@@ -21,7 +21,7 @@ locals {
 # Configure the version of the module to use in this environment. This allows you to promote new versions one
 # environment at a time (e.g., qa -> stage -> prod).
 terraform {
-  source = "git::git@github.com:gruntwork-io/terragrunt-infrastructure-modules-example.git//modules/mysql?ref=v0.8.0"
+  source = "github.com/gruntwork-io/terragrunt-infrastructure-modules-example//modules/mysql?ref=v0.8.0"
 }
 
 inputs = {
