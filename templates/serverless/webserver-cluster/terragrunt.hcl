@@ -10,12 +10,12 @@ include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
-# Include the envcommon configuration for the component. The envcommon configuration contains settings that are common
-# for the component across all environments.
-include "envcommon" {
-  path = "${dirname(find_in_parent_folders("root.hcl"))}/_envcommon/webserver-cluster.hcl"
-  # We want to reference the variables from the included config in this configuration, so we expose it.
-  expose = true
+locals {
+  # Automatically load environment-level variables
+  environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+
+  # Extract out common variables for reuse
+  env = local.environment_vars.locals.environment
 }
 
 # Configure the version of the module to use in this environment. This allows you to promote new versions one
@@ -24,6 +24,13 @@ terraform {
   source = "git::git@github.com:gruntwork-io/terragrunt-infrastructure-modules-example.git//modules/asg-alb-service?ref=v0.8.0"
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# We don't need to override any of the common parameters for this environment, so we don't specify any other parameters.
-# ---------------------------------------------------------------------------------------------------------------------
+inputs = {
+  name          = "webserver-example-${local.env}"
+  instance_type = "t2.micro"
+
+  min_size = 2
+  max_size = 2
+
+  server_port = 8080
+  alb_port    = 80
+}
